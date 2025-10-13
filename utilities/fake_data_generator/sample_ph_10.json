@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Laura Jensen",
+    "address": "B23 L42 Bagtikan Road, Anthony Village 4, Datu Saudi-Ampatuan, 8128 Zamboanga Sibugay",
+    "email": "calderonandrew@example.org",
+    "phone_number": "09717623806",
+    "company": "TW Millennium Liberty Resources Inc.",
+    "job": "Magazine journalist",
+    "date_of_birth": "1921-05-09"
+  },
+  {
+    "name": "Colin Lane",
+    "address": "Room 424 Lumbayao Condominiums Tower 4, 2651 Earth Avenue, Rajah Buayan, 8195 Davao Oriental",
+    "email": "natalie72@example.com",
+    "phone_number": "09603782403",
+    "company": "Evans Silver Solutions Inc.",
+    "job": "Armed forces logistics/support/administrative officer",
+    "date_of_birth": "2003-07-27"
+  },
+  {
+    "name": "Nancy Rose",
+    "address": "9027-E Andromeda Street, Aloguinsan, 2345 Ilocos Sur",
+    "email": "cookapril@example.net",
+    "phone_number": "09957338627",
+    "company": "Sovereign Sun Summit Group Corporation",
+    "job": "Magazine features editor",
+    "date_of_birth": "2004-06-30"
+  },
+  {
+    "name": "Wanda Bowen",
+    "address": "Room 815 Pluto Residences, 3459 Bulusan Drive, Banguingui, 4081 Kalinga",
+    "email": "andreapowell@example.com",
+    "phone_number": "09316880623",
+    "company": "NHA City Foods Inc.",
+    "job": "Chief Technology Officer",
+    "date_of_birth": "2015-08-16"
+  },
+  {
+    "name": "Nicholas Ramos",
+    "address": "2201G Lawaan Avenue, General MacArthur, 9421 Sarangani",
+    "email": "corey08@example.net",
+    "phone_number": "09383627542",
+    "company": "YRK Crown Genesis Foods Corporation",
+    "job": "Energy manager",
+    "date_of_birth": "1926-01-28"
+  },
+  {
+    "name": "Travis Briggs",
+    "address": "5919 36th Extension, Wright Estates Phase 8, Makati, 1336 Metro Manila",
+    "email": "stricklandchristopher@example.com",
+    "phone_number": "09225783237",
+    "company": "Roberts Crown Hotel Inc.",
+    "job": "Programmer, applications",
+    "date_of_birth": "1947-04-29"
+  },
+  {
+    "name": "Jennifer Jackson",
+    "address": "3965 Uranus Highway, Allison Subdivision Phase 8, Tinoc, 5513 Catanduanes",
+    "email": "pwhite@example.com",
+    "phone_number": "09785624602",
+    "company": "Manila Development Inc.",
+    "job": "Special educational needs teacher",
+    "date_of_birth": "1921-10-05"
+  },
+  {
+    "name": "Larry Atkins",
+    "address": "8197 Palanan Street, Harvey Village, Santa Ignacia, 8708 Surigao del Norte",
+    "email": "ross65@example.net",
+    "phone_number": "09661049106",
+    "company": "Prime Mining Inc.",
+    "job": "Best boy",
+    "date_of_birth": "1951-12-08"
+  },
+  {
+    "name": "Christina Ortiz",
+    "address": "3817 Unit I Emerald Street, Kalilangan, 3348 Quezon",
+    "email": "cynthia52@example.net",
+    "phone_number": "09689286941",
+    "company": "Philippine Silver Construction Inc.",
+    "job": "Optometrist",
+    "date_of_birth": "1996-01-21"
+  },
+  {
+    "name": "Deborah Mayo",
+    "address": "7676 36th Street, Peterson Cove 6, Marantao, 7237 Basilan",
+    "email": "tknapp@example.com",
+    "phone_number": "09033867776",
+    "company": "Martin Star Manufacturing Limited",
+    "job": "Technical sales engineer",
+    "date_of_birth": "1965-10-27"
+  }
+]
