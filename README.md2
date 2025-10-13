@@ -1,0 +1,12 @@
+# utilities/fake_data_generator
+
+Small utility to generate fake person records using Faker.
+
+## Requirements
+- Python 3.8+
+- Faker (see requirements.txt)
+
+## Run GUI
+Activate your virtual environment, then:
+```bash
+python gui.py
