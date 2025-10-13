@@ -24,7 +24,11 @@ class FakeDataGenerator:
             "name": self._faker.name(),
             "address": self._faker.address(),
             "email": self._faker.email(),
-            "phone_number": self._faker.phone_number(),
+            # Some locales (eg. certain PH locales) may not expose phone_number.
+            # Use a fallback pattern for Philippine mobile numbers if provider missing.
+            "phone_number": (self._faker.phone_number()
+                             if hasattr(self._faker, "phone_number")
+                             else self._faker.numerify("09#########")),
             "company": self._faker.company(),
             "job": self._faker.job(),
             "date_of_birth": self._faker.date_of_birth().isoformat(),
