@@ -1,6 +1,7 @@
 import argparse
 import json
-from generator import FakeDataGenerator
+from .generator import FakeDataGenerator
+
 
 
 def main():
