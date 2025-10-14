@@ -1,5 +1,12 @@
 from faker import Faker
 from typing import List, Dict, Any, Optional
+import json
+from typing import Callable, TYPE_CHECKING
+import importlib
+
+
+class AuthenticationError(PermissionError):
+    """Raised when authentication fails."""
 
 
 class FakeDataGenerator:
@@ -10,13 +17,60 @@ class FakeDataGenerator:
         data = g.generate(100)
     """
 
-    def __init__(self, locale: Optional[str] = None, seed: Optional[int] = None):
+    def __init__(self, locale: Optional[str] = None, seed: Optional[int] = None,
+                 username: Optional[str] = None, password: Optional[str] = None,
+                 authenticated_user: Optional[str] = None):
         self.locale = locale
         self.seed = seed
+        # Optional authentication context. The generator will attempt to verify
+        # credentials if username/password are supplied. If `authenticated_user`
+        # is provided we assume a prior successful login and skip verification.
+        self._username = username
+        self._password = password
+        self._authenticated_user = authenticated_user
+
         # Initialize Faker instance
         self._faker = Faker(locale) if locale else Faker()
         if seed is not None:
             self._faker.seed_instance(seed)
+        # perform credential verification lazily on generate() to avoid
+        # importing auth modules at top-level during packaging.
+        self._auth_checked = False
+
+    def _check_auth(self) -> bool:
+        """Return True if the user is authenticated.
+
+        If username/password were supplied, call into the auth package to
+        verify them. If authenticated_user is provided, accept as authenticated.
+        """
+        if self._auth_checked:
+            return True
+        if self._authenticated_user:
+            self._auth_checked = True
+            return True
+        if not self._username:
+            # no credentials provided; treat as unauthenticated but allow
+            # generation (backwards-compatible). Caller can opt to require auth.
+            return False
+        # lazy import using importlib so static analyzers (Pylance) don't
+        # report missing imports while preserving runtime lazy-import behavior.
+        if TYPE_CHECKING:
+            # For type checkers only: this path isn't executed at runtime but
+            # helps tools resolve the symbol.
+            from auth.user_auth import verify_user  # type: ignore
+
+        try:
+            mod = importlib.import_module("auth.user_auth")
+            verify_user = getattr(mod, "verify_user")
+        except Exception:
+            # If auth package is missing at runtime, raise a clear error.
+            raise AuthenticationError("Authentication module not available")
+
+        ok = verify_user(self._username, self._password or "")
+        if not ok:
+            raise AuthenticationError("Invalid username or password")
+        self._auth_checked = True
+        return True
 
     def _single(self) -> Dict[str, Any]:
         """Generate a single synthetic record."""
@@ -44,4 +98,82 @@ class FakeDataGenerator:
         """
         if n <= 0:
             return []
+        # check authentication; if credentials were provided, this will raise
+        # AuthenticationError on failure. If no credentials were provided this
+        # will return False but we still allow generation for backwards
+        # compatibility.
+        try:
+            self._check_auth()
+        except AuthenticationError:
+            # re-raise to caller
+            raise
+
         return [self._single() for _ in range(int(n))]
+
+
+def open_fake_data_gui(username: Optional[str] = None):
+    """Small Tkinter-based UI to generate fake data for an authenticated user.
+
+    This is intentionally simple: it assumes the caller has already
+    authenticated the user (e.g. via `auth.login_gui`). If `username` is
+    provided it will be displayed in the window and the generator will be
+    created with `authenticated_user=username` to skip re-checking credentials.
+    """
+    try:
+        import tkinter as tk
+        from tkinter import messagebox, filedialog
+    except Exception:
+        raise RuntimeError("Tkinter not available")
+
+    def _on_generate():
+        try:
+            cnt = int(num_entry.get() or "0")
+        except ValueError:
+            messagebox.showerror("Input", "Please enter a valid integer for number of records.")
+            return
+        loc = locale_entry.get() or None
+        seed_val = seed_entry.get() or None
+        seed_val = int(seed_val) if seed_val and seed_val.isdigit() else None
+        gen = FakeDataGenerator(locale=loc, seed=seed_val, authenticated_user=username)
+        try:
+            data = gen.generate(cnt)
+        except AuthenticationError as e:
+            messagebox.showerror("Auth", str(e))
+            return
+
+        # show/save
+        if messagebox.askyesno("Save", "Save generated data to a file?"):
+            path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON", "*.json")])
+            if path:
+                with open(path, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=2, default=str)
+                messagebox.showinfo("Saved", f"Wrote {len(data)} records to {path}")
+        else:
+            # show JSON in a readonly window
+            out = tk.Toplevel(root)
+            out.title("Generated Data Preview")
+            txt = tk.Text(out, wrap="none", width=80, height=20)
+            txt.insert("1.0", json.dumps(data, indent=2, default=str))
+            txt.configure(state="disabled")
+            txt.pack(fill="both", expand=True)
+
+    root = tk.Tk()
+    root.title("Fake Data Generator — Authenticated")
+    root.geometry("420x240")
+
+    tk.Label(root, text=f"User: {username}" if username else "User: (anonymous)").pack(pady=6)
+    tk.Label(root, text="Number of records:").pack()
+    num_entry = tk.Entry(root)
+    num_entry.insert(0, "10")
+    num_entry.pack()
+
+    tk.Label(root, text="Locale (optional):").pack()
+    locale_entry = tk.Entry(root)
+    locale_entry.pack()
+
+    tk.Label(root, text="Seed (optional integer):").pack()
+    seed_entry = tk.Entry(root)
+    seed_entry.pack()
+
+    tk.Button(root, text="Generate", command=_on_generate, bg="#007bff", fg="white").pack(pady=10)
+    root.mainloop()
