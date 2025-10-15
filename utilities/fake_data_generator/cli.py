@@ -2,8 +2,7 @@ import argparse
 import json
 import os
 import sys
-import getpass
-from .generator import FakeDataGenerator, AuthenticationError
+from .generator import FakeDataGenerator
 
 
 def main():
@@ -13,25 +12,11 @@ def main():
     p.add_argument("--force", action="store_true", help="overwrite outfile if it exists")
     p.add_argument("--locale", default=None, help="Faker locale, e.g. en_US")
     p.add_argument("--seed", type=int, default=None, help="optional seed for reproducibility")
-    p.add_argument("--username", default=None, help="username for authentication (optional)")
-    p.add_argument("--password", default=None, help="password for authentication (optional)")
+    # authentication handled outside of generator; CLI remains simple
     args = p.parse_args()
 
-    # Prompt for password if username provided but password omitted
-    if args.username and not args.password:
-        try:
-            args.password = getpass.getpass(prompt=f"Password for {args.username}: ")
-        except Exception:
-            print("Could not read password from terminal.")
-            raise SystemExit(1)
-
-    g = FakeDataGenerator(locale=args.locale, seed=args.seed,
-                          username=args.username, password=args.password)
-    try:
-        data = g.generate(args.number)
-    except AuthenticationError as e:
-        print(f"Authentication failed: {e}")
-        raise SystemExit(1)
+    g = FakeDataGenerator(locale=args.locale, seed=args.seed)
+    data = g.generate(args.number)
 
     if args.outfile:
         if args.number < 0:

@@ -1,6 +1,6 @@
 import json
 from typing import Optional
-from .generator import FakeDataGenerator, AuthenticationError
+from .generator import FakeDataGenerator
 
 def open_fake_data_gui(username: Optional[str] = None):
     """Temporary Tkinter-based UI to generate fake data for an authenticated user.
@@ -21,12 +21,8 @@ def open_fake_data_gui(username: Optional[str] = None):
         loc = locale_entry.get() or None
         seed_val = seed_entry.get() or None
         seed_val = int(seed_val) if seed_val and seed_val.isdigit() else None
-        gen = FakeDataGenerator(locale=loc, seed=seed_val, authenticated_user=username)
-        try:
-            data = gen.generate(cnt)
-        except AuthenticationError as e:
-            messagebox.showerror("Auth", str(e))
-            return
+        gen = FakeDataGenerator(locale=loc, seed=seed_val)
+        data = gen.generate(cnt)
 
         # show/save
         if messagebox.askyesno("Save", "Save generated data to a file?"):
