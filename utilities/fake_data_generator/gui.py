@@ -64,3 +64,8 @@ def open_fake_data_gui(username: Optional[str] = None):
 
     tk.Button(root, text="Generate", command=_on_generate, bg="#007bff", fg="white").pack(pady=10)
     root.mainloop()
+
+
+if __name__ == "__main__":
+    # Allow running the temporary GUI as a module: python -m utilities.fake_data_generator.gui
+    open_fake_data_gui()
