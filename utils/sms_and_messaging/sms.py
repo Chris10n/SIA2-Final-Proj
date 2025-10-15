@@ -1,23 +1,30 @@
 import requests
 import json
+from re import match
 from os import getenv
-from sys import exit
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-def __validate_number(number: str):
+def __is_valid_number(number: str) -> bool:
+    patterE164 = r"^\+[1-9]\d{1,14}$"
+
     try:
-        if len(number) > 13:
-            raise Exception("Recipient number is too long.")
+        if len(number) > 16:
+            raise Exception("Number is too long.")
+        if not bool(match(patterE164, number)):
+            raise Exception("Number does not adhere to E.164 format.")
     except Exception as e:
         print(f"Invalid phone number: {e}")
-        exit(1)
+        return False
+
+    return True
 
 
 def send_SMS(recipient: str, message: str):
-    __validate_number(recipient)
+    if not __is_valid_number(recipient):
+        return
 
     apiKey = getenv("HTTPSMS_API_KEY")
     url = "https://api.httpsms.com/v1/messages/send"
