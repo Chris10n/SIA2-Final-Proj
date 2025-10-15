@@ -10,6 +10,9 @@ wheels/
 .venv
 venv/
 
+# Config Files
+.env
+
 # Ignore generated fake-data outputs and samples
 /my_output.json
 utilities/fake_data_generator/*.json
