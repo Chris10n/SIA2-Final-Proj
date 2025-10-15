@@ -2,16 +2,25 @@ import argparse
 import json
 import os
 import sys
-from .generator import FakeDataGenerator
+from generator import FakeDataGenerator
 
 
 def main():
     p = argparse.ArgumentParser(description="Generate fake data to stdout or file")
     p.add_argument("-n", "--number", type=int, default=10, help="number of records")
-    p.add_argument("-o", "--outfile", default=None, help="output file (json). If omitted, prints to stdout")
-    p.add_argument("--force", action="store_true", help="overwrite outfile if it exists")
+    p.add_argument(
+        "-o",
+        "--outfile",
+        default=None,
+        help="output file (json). If omitted, prints to stdout",
+    )
+    p.add_argument(
+        "--force", action="store_true", help="overwrite outfile if it exists"
+    )
     p.add_argument("--locale", default=None, help="Faker locale, e.g. en_US")
-    p.add_argument("--seed", type=int, default=None, help="optional seed for reproducibility")
+    p.add_argument(
+        "--seed", type=int, default=None, help="optional seed for reproducibility"
+    )
     # authentication handled outside of generator; CLI remains simple
     args = p.parse_args()
 
