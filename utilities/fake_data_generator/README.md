@@ -1,34 +1,38 @@
 # Fake Data Generator
 
-Small utility wrapping Faker to produce previewable datasets and export to CSV/JSON.
+Modular fake-data generator using Faker. The codebase keeps the generator
+logic separate from the temporary GUI so the GUI can be removed later
+without affecting the core functionality.
 
-Usage
------
+Structure
+---------
 
-Programmatically
+utilities/
+└── fake_data_generator/
+	├── generator.py   # pure data logic (FakeDataGenerator)
+	├── cli.py         # small CLI wrapper
+	├── gui.py         # temporary Tkinter GUI (optional)
+	└── __init__.py
 
-from generator import FakeDataGenerator
+How to use
+----------
+
+Programmatically:
+
+from utilities.fake_data_generator import FakeDataGenerator
 
 g = FakeDataGenerator(locale='en_US', seed=42)
-data = g.generate(100)
+data = g.generate(10)
 
-GUI
----
+CLI (module form):
 
-Run:
+python -m utilities.fake_data_generator.cli -n 10
 
-python gui.py
+GUI (temporary):
 
-Click "Generate Preview" then export as CSV or JSON.
-
-CLI
----
-
-Run:
-
-python cli.py -n 50 -o sample50.json
+python -m utilities.fake_data_generator.gui
 
 Dependencies
 ------------
 
-See `requirements.txt`.
+See `requirements.txt` (Faker). Use a virtual environment for development.
