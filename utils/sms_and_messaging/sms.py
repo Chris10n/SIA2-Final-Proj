@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def __validate_number(number):
+def __validate_number(number: str):
     try:
         if len(number) > 13:
             raise Exception("Recipient number is too long.")
@@ -16,7 +16,7 @@ def __validate_number(number):
         exit(1)
 
 
-def send_SMS(recipient, message):
+def send_SMS(recipient: str, message: str):
     __validate_number(recipient)
 
     apiKey = getenv("HTTPSMS_API_KEY")
