@@ -1,5 +1,3 @@
-
-
 import sys
 import argparse
 import urllib.parse
@@ -47,3 +45,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
