@@ -36,11 +36,17 @@ def send_SMS(recipient: str, message: str):
         return
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     if not __is_valid_message(message):
         return
 
 =======
 >>>>>>> 0524c00 (add: message max length is 160)
+=======
+    if not __is_valid_message(message):
+        return
+
+>>>>>>> 22cc0d1 (add: message max length is 160)
     apiKey = getenv("HTTPSMS_API_KEY")
     url = "https://api.httpsms.com/v1/messages/send"
 
