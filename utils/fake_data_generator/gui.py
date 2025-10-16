@@ -1,6 +1,7 @@
 import json
 from typing import Optional
-from .generator import FakeDataGenerator
+from generator import FakeDataGenerator
+
 
 def open_fake_data_gui(username: Optional[str] = None):
     """Temporary Tkinter-based UI to generate fake data for an authenticated user.
@@ -16,7 +17,9 @@ def open_fake_data_gui(username: Optional[str] = None):
         try:
             cnt = int(num_entry.get() or "0")
         except ValueError:
-            messagebox.showerror("Input", "Please enter a valid integer for number of records.")
+            messagebox.showerror(
+                "Input", "Please enter a valid integer for number of records."
+            )
             return
         loc = locale_entry.get() or None
         seed_val = seed_entry.get() or None
@@ -26,7 +29,9 @@ def open_fake_data_gui(username: Optional[str] = None):
 
         # show/save
         if messagebox.askyesno("Save", "Save generated data to a file?"):
-            path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON", "*.json")])
+            path = filedialog.asksaveasfilename(
+                defaultextension=".json", filetypes=[("JSON", "*.json")]
+            )
             if path:
                 with open(path, "w", encoding="utf-8") as f:
                     json.dump(data, f, indent=2, default=str)
@@ -44,7 +49,9 @@ def open_fake_data_gui(username: Optional[str] = None):
     root.title("Fake Data Generator — Authenticated")
     root.geometry("420x240")
 
-    tk.Label(root, text=f"User: {username}" if username else "User: (anonymous)").pack(pady=6)
+    tk.Label(root, text=f"User: {username}" if username else "User: (anonymous)").pack(
+        pady=6
+    )
     tk.Label(root, text="Number of records:").pack()
     num_entry = tk.Entry(root)
     num_entry.insert(0, "10")
@@ -58,10 +65,13 @@ def open_fake_data_gui(username: Optional[str] = None):
     seed_entry = tk.Entry(root)
     seed_entry.pack()
 
-    tk.Button(root, text="Generate", command=_on_generate, bg="#007bff", fg="white").pack(pady=10)
+    tk.Button(
+        root, text="Generate", command=_on_generate, bg="#007bff", fg="white"
+    ).pack(pady=10)
     root.mainloop()
 
 
 if __name__ == "__main__":
     # Allow running the temporary GUI as a module: python -m utilities.fake_data_generator.gui
     open_fake_data_gui()
+
