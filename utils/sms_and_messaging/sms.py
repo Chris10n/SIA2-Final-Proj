@@ -22,6 +22,15 @@ def __is_valid_number(number: str) -> bool:
     return True
 
 
+def __is_valid_message(message: str) -> bool:
+    try:
+        if len(message.strip()) > 160:
+            raise Exception("Message exceeds max cap of 160.")
+    except Exception as e:
+        print(f"Invalid message: {e}")
+        return False
+
+
 def send_SMS(recipient: str, message: str):
     if not __is_valid_number(recipient):
         return
