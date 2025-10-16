@@ -35,6 +35,9 @@ def send_SMS(recipient: str, message: str):
     if not __is_valid_number(recipient):
         return
 
+    if not __is_valid_message(message):
+        return
+
     apiKey = getenv("HTTPSMS_API_KEY")
     url = "https://api.httpsms.com/v1/messages/send"
 
