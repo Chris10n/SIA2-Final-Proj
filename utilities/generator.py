@@ -1,7 +1,5 @@
 from faker import Faker
-import random
 from typing import Optional, List, Dict, Any
-from faker import Faker
 
 
 def generate_fake_people(n: int = 10, *, locale: Optional[str] = None, seed: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -18,7 +16,6 @@ def generate_fake_people(n: int = 10, *, locale: Optional[str] = None, seed: Opt
 
     fake = Faker(locale) if locale else Faker()
     if seed is not None:
-        # make this instance deterministic
         fake.seed_instance(seed)
 
     people: List[Dict[str, Any]] = []
@@ -36,6 +33,5 @@ def generate_fake_people(n: int = 10, *, locale: Optional[str] = None, seed: Opt
 
 
 if __name__ == "__main__":
-    # quick smoke-run
     for person in generate_fake_people(5):
         print(person)
