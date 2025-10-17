@@ -1,5 +1,3 @@
-import sys
-import argparse
 import urllib.parse
 import requests
 from requests.exceptions import RequestException
@@ -18,7 +16,6 @@ def validate_url(url: str) -> str:
     return url
 
 def shorten_tinyurl(long_url: str, timeout: float = 5.0) -> str:
-   
     long_url = validate_url(long_url)
     params = {"url": long_url}
     try:
@@ -31,18 +28,10 @@ def shorten_tinyurl(long_url: str, timeout: float = 5.0) -> str:
         raise ValueError(f"Unexpected API response: {short_url!r}")
     return short_url
 
-def main():
-    parser = argparse.ArgumentParser(description="Shorten a URL with TinyURL")
-    parser.add_argument("url", nargs=1, help="Long URL to shorten")
-    args = parser.parse_args()
-    long_url = args.url[0]
+if __name__ == "__main__":
+    long_url = input("Enter a URL to shorten: ").strip()
     try:
         short = shorten_tinyurl(long_url)
-        print(short)
+        print(f"Shortened URL: {short}")
     except Exception as e:
-        print("Error:", e, file=sys.stderr)
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main()
-
+        print(f"Error: {e}")
