@@ -1,16 +1,24 @@
 import requests
 import json
+import sys
 
-long_url = input("Enter the URL you want to shorten: ").strip()
+if len(sys.argv) < 2:
+    print("Usage: python shortener.py '{\"token\": \"YOUR_TOKEN\", \"longURL\": \"YOUR_URL\"}'")
+    sys.exit(1)
+
+try:
+    args = json.loads(sys.argv[1])
+    API_TOKEN = args["token"]
+    long_url = args["longURL"]
+except (json.JSONDecodeError, KeyError) as e:
+    print("Invalid JSON input or missing keys. Make sure to include 'token' and 'longURL'.")
+    sys.exit(1)
 
 API_URL = "https://api.tinyurl.com/create"
-API_TOKEN = "aK9n4WR0pqaDOmBenU83JIFuqgI67G412sDwSO4hVB2Bb5IPbNimTHZreG5L"
-
 headers = {
     "Authorization": f"Bearer {API_TOKEN}",
     "Content-Type": "application/json"
 }
-
 data = {
     "url": long_url,
     "domain": "tinyurl.com"
