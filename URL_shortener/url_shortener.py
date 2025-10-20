@@ -1,40 +1,60 @@
+import urllib.parse
 import requests
-import json
-import sys
+from requests.exceptions import RequestException
 
-if len(sys.argv) < 2:
-    print("Usage: python shortener.py '{\"token\": \"YOUR_TOKEN\", \"longURL\": \"YOUR_URL\"}'")
-    sys.exit(1)
 
-try:
-    args = json.loads(sys.argv[1])
-    API_TOKEN = args["token"]
-    long_url = args["longURL"]
-except (json.JSONDecodeError, KeyError) as e:
-    print("Invalid JSON input or missing keys. Make sure to include 'token' and 'longURL'.")
-    sys.exit(1)
+import os
+from dotenv import load_dotenv
 
-API_URL = "https://api.tinyurl.com/create"
-headers = {
-    "Authorization": f"Bearer {API_TOKEN}",
-    "Content-Type": "application/json"
-}
-data = {
-    "url": long_url,
-    "domain": "tinyurl.com"
-}
+load_dotenv()
 
-print("\nShortening your URL... please wait.")
-response = requests.post(API_URL, headers=headers, json=data)
 
-if response.status_code == 200:
-    result = response.json()
-    tiny_url = result["data"]["tiny_url"]
-    print(f"\nSuccess!\nOriginal URL: {long_url}\nShortened URL: {tiny_url}\n")
-else:
-    print("\nFailed to shorten URL.")
-    print(f"Status Code: {response.status_code}")
+api_base = "https://api.tinyurl.com"
+shorten_endpoint = f"{api_base}/create" 
+
+def validate_url(url: str) -> str:
+    url = url.strip()
+    if not url:
+        raise ValueError("Empty URL")
+    if "://" not in url:
+        url = "http://" + url
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError("Only http/https URLs are supported")
+    return url
+
+def shorten_tinyurl(long_url: str, api_token: str, timeout: float = 5.0) -> str:
+    long_url = validate_url(long_url)
+
+    headers = {
+        "Authorization": f"Bearer {api_token}",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+    }
+
+    payload = {
+        "url": long_url,
+        "domain": "tinyurl.com",
+    }
+
     try:
-        print("Error details:", json.dumps(response.json(), indent=2))
-    except:
-        print("Error:", response.text)
+        resp = requests.post(shorten_endpoint, json=payload, headers=headers, timeout=timeout)
+        resp.raise_for_status()
+    except RequestException as e:
+        raise RequestException(f"Network/API request failed: {e}")
+
+    data = resp.json()
+    if "data" in data and "tiny_url" in data["data"]:
+        return data["data"]["tiny_url"]
+    else:
+        raise ValueError(f"Unexpected API response: {data!r}")
+
+if name == "main":
+    api_token = os.getenv("TINYURL_API_TOKEN") 
+    long_url = input("Enter the URL to shorten: ").strip()
+
+    try:
+        short = shorten_tinyurl(long_url, api_token)
+        print(f"Shortened URL: {short}")
+    except Exception as e:
+        print(f"Error: {e}")
