@@ -1,37 +1,32 @@
-import urllib.parse
 import requests
-from requests.exceptions import RequestException
+import json
 
-API_ENDPOINT = "https://tinyurl.com/api-create.php"
+long_url = input("Enter the URL you want to shorten: ").strip()
 
-def validate_url(url: str) -> str:
-    url = url.strip()
-    if not url:
-        raise ValueError("Empty URL")
-    if "://" not in url:
-        url = "http://" + url
-    parsed = urllib.parse.urlparse(url)
-    if parsed.scheme not in ("http", "https"):
-        raise ValueError("Only http/https URLs are supported")
-    return url
+API_URL = "https://api.tinyurl.com/create"
+API_TOKEN = "aK9n4WR0pqaDOmBenU83JIFuqgI67G412sDwSO4hVB2Bb5IPbNimTHZreG5L"
 
-def shorten_tinyurl(long_url: str, timeout: float = 5.0) -> str:
-    long_url = validate_url(long_url)
-    params = {"url": long_url}
+headers = {
+    "Authorization": f"Bearer {API_TOKEN}",
+    "Content-Type": "application/json"
+}
+
+data = {
+    "url": long_url,
+    "domain": "tinyurl.com"
+}
+
+print("\nShortening your URL... please wait.")
+response = requests.post(API_URL, headers=headers, json=data)
+
+if response.status_code == 200:
+    result = response.json()
+    tiny_url = result["data"]["tiny_url"]
+    print(f"\nSuccess!\nOriginal URL: {long_url}\nShortened URL: {tiny_url}\n")
+else:
+    print("\nFailed to shorten URL.")
+    print(f"Status Code: {response.status_code}")
     try:
-        resp = requests.get(API_ENDPOINT, params=params, timeout=timeout)
-        resp.raise_for_status()
-    except RequestException as e:
-        raise RequestException(f"Network/API request failed: {e}")
-    short_url = resp.text.strip()
-    if not short_url.startswith("http"):
-        raise ValueError(f"Unexpected API response: {short_url!r}")
-    return short_url
-
-if __name__ == "__main__":
-    long_url = input("Enter a URL to shorten: ").strip()
-    try:
-        short = shorten_tinyurl(long_url)
-        print(f"Shortened URL: {short}")
-    except Exception as e:
-        print(f"Error: {e}")
+        print("Error details:", json.dumps(response.json(), indent=2))
+    except:
+        print("Error:", response.text)
