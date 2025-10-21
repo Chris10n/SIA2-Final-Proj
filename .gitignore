@@ -25,20 +25,3 @@ Thumbs.db
 
 # Config Files
 .env
-.python-version
-
-# Ignore generated fake-data outputs and samples
-/my_output.json
-*.json
-
-# Ignore legacy or duplicate package artifacts
-utilities/fake_data_generator/
-utils/fake_data_generator/
-
-# Local-only files
-.pytest_cache/
-.mypy_cache/
-
-# Coverage
-.coverage
-coverage.xml
