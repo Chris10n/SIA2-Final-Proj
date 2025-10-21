@@ -9,11 +9,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-api_base = "https://api.tinyurl.com"
-shorten_endpoint = f"{api_base}/create"
+__api_base = "https://api.tinyurl.com"
+__shorten_endpoint = f"{__api_base}/create"
 
 
-def validate_url(url: str) -> str:
+def __validate_url(url: str) -> str:
     url = url.strip()
     if not url:
         raise ValueError("Empty URL")
@@ -26,7 +26,7 @@ def validate_url(url: str) -> str:
 
 
 def shorten_tinyurl(long_url: str, timeout: float = 5.0) -> str:
-    long_url = validate_url(long_url)
+    long_url = __validate_url(long_url)
 
     headers = {
         "Authorization": f"Bearer {os.getenv('TINYURL_API_TOKEN')}",
@@ -41,7 +41,7 @@ def shorten_tinyurl(long_url: str, timeout: float = 5.0) -> str:
 
     try:
         resp = requests.post(
-            shorten_endpoint, json=payload, headers=headers, timeout=timeout
+            __shorten_endpoint, json=payload, headers=headers, timeout=timeout
         )
         resp.raise_for_status()
     except RequestException as e:

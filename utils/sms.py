@@ -1,5 +1,5 @@
-import requests
-import json
+from requests import post
+from json import dumps
 from re import match
 from os import getenv
 from dotenv import load_dotenv
@@ -8,12 +8,12 @@ load_dotenv()
 
 
 def __is_valid_number(number: str) -> bool:
-    patterE164 = r"^\+[1-9]\d{1,14}$"
+    patternE164 = r"^\+[1-9]\d{1,14}$"
 
     try:
         if len(number) > 16:
             raise Exception("Number is too long.")
-        if not bool(match(patterE164, number)):
+        if not bool(match(patternE164, number)):
             raise Exception("Number does not adhere to E.164 format.")
     except Exception as e:
         print(f"Invalid phone number: {e}")
@@ -29,6 +29,8 @@ def __is_valid_message(message: str) -> bool:
     except Exception as e:
         print(f"Invalid message: {e}")
         return False
+
+    return True
 
 
 def send_SMS(recipient: str, message: str):
@@ -53,5 +55,5 @@ def send_SMS(recipient: str, message: str):
         "to": recipient,
     }
 
-    response = requests.post(url, headers=headers, data=json.dumps(payload))
-    print(json.dumps(response.json(), indent=4))
+    response = post(url, headers=headers, data=dumps(payload))
+    print(dumps(response.json(), indent=4))
