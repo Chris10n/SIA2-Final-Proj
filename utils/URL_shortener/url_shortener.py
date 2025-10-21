@@ -10,7 +10,8 @@ load_dotenv()
 
 
 api_base = "https://api.tinyurl.com"
-shorten_endpoint = f"{api_base}/create" 
+shorten_endpoint = f"{api_base}/create"
+
 
 def validate_url(url: str) -> str:
     url = url.strip()
@@ -23,11 +24,12 @@ def validate_url(url: str) -> str:
         raise ValueError("Only http/https URLs are supported")
     return url
 
-def shorten_tinyurl(long_url: str, api_token: str, timeout: float = 5.0) -> str:
+
+def shorten_tinyurl(long_url: str, timeout: float = 5.0) -> str:
     long_url = validate_url(long_url)
 
     headers = {
-        "Authorization": f"Bearer {api_token}",
+        "Authorization": f"Bearer {os.getenv('TINYURL_API_TOKEN')}",
         "Content-Type": "application/json",
         "Accept": "application/json",
     }
@@ -38,7 +40,9 @@ def shorten_tinyurl(long_url: str, api_token: str, timeout: float = 5.0) -> str:
     }
 
     try:
-        resp = requests.post(shorten_endpoint, json=payload, headers=headers, timeout=timeout)
+        resp = requests.post(
+            shorten_endpoint, json=payload, headers=headers, timeout=timeout
+        )
         resp.raise_for_status()
     except RequestException as e:
         raise RequestException(f"Network/API request failed: {e}")
@@ -48,13 +52,3 @@ def shorten_tinyurl(long_url: str, api_token: str, timeout: float = 5.0) -> str:
         return data["data"]["tiny_url"]
     else:
         raise ValueError(f"Unexpected API response: {data!r}")
-
-if name == "main":
-    api_token = os.getenv("TINYURL_API_TOKEN") 
-    long_url = input("Enter the URL to shorten: ").strip()
-
-    try:
-        short = shorten_tinyurl(long_url, api_token)
-        print(f"Shortened URL: {short}")
-    except Exception as e:
-        print(f"Error: {e}")
