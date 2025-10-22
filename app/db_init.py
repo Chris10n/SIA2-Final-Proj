@@ -1,7 +1,6 @@
 from app.db import get_connection
 
 def init_db():
-    """Create the database and users table if not exists."""
     conn = get_connection()
     cur = conn.cursor()
 
