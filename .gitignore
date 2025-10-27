@@ -1,0 +1,27 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+# Python-generated files
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.py[co]
+
+# Build artifacts
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+venv/
+
+# Editor & OS
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Config Files
+.env
