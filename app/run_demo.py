@@ -22,14 +22,14 @@ def demo():
             if user:
                 print(f"Username: {user[0]} | Password: {user[1]}")
             else:
-                print("❌ User not found.")
+                print("User not found.")
 
         elif choice == "3":
             print("👋 Goodbye!")
             break
 
         else:
-            print("⚠️ Invalid option. Try again.")
+            print("Invalid option. Try again.")
 
 if __name__ == "__main__":
     demo()

@@ -9,9 +9,9 @@ def add_user(username, password):
             (username, password)
         )
         conn.commit()
-        print("✅ User added successfully!")
+        print("User added successfully!")
     except Exception as e:
-        print("⚠️ Error adding user:", e)
+        print("Error adding user:", e)
     finally:
         conn.close()
 
