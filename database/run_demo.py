@@ -1,5 +1,5 @@
-from app.db_init import init_db
-from app.crud import add_user, get_user_by_username
+from database.db_init import init_db
+from database.crud import add_user, get_user_by_username
 
 def demo():
     init_db()

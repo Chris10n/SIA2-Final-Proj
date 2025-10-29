@@ -1,4 +1,4 @@
-from app.db import get_connection
+from database.db import get_connection
 
 def add_user(username, password):
     conn = get_connection()
