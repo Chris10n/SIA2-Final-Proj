@@ -1,27 +1,21 @@
-# Python-generated files
+# --- Python cache files ---
 __pycache__/
-*.py[oc]
-build/
-# Python-generated files
-__pycache__/
-**/__pycache__/
-*.py[cod]
-*.py[co]
+*.pyc
+*.pyo
+*.pyd
 
-# Build artifacts
-build/
-dist/
-wheels/
-*.egg-info
-
-# Virtual environments
+# --- Virtual environments ---
 .venv/
-venv/
 
-# Editor & OS
-.vscode/
+# --- SQLite databases ---
+*.db
+
+# --- IDE/project files ---
+.idea/
+
+# --- OS-generated files ---
 .DS_Store
 Thumbs.db
 
-# Config Files
-.env
+# --- Git-related ---
+SIA2-Final-Proj/
